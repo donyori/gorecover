@@ -18,7 +18,7 @@ func RecoverWithStackTrace(f func()) (err error, stackTrace string) {
 		if e := recover(); e != nil {
 			s := string(debug.Stack())
 			idx := strings.Index(s, "\npanic(")
-			if idx > 0 {
+			if idx >= 0 {
 				stackTrace = s[idx+1:]
 			}
 			err = ConvErr(e)
