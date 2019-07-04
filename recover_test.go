@@ -6,7 +6,6 @@ import (
 )
 
 func TestRecover1(t *testing.T) {
-	t.Log("Test 1")
 	e := errors.New("error1")
 	err := Recover(func() {
 		panic(e)
@@ -18,7 +17,6 @@ func TestRecover1(t *testing.T) {
 }
 
 func TestRecover2(t *testing.T) {
-	t.Log("Test 2")
 	e := "error2"
 	err := Recover(func() {
 		panic(e)
@@ -30,9 +28,26 @@ func TestRecover2(t *testing.T) {
 }
 
 func TestRecover3(t *testing.T) {
-	t.Log("Test 3")
 	err := Recover(func() {})
 	if err != nil {
 		t.Errorf("err (%v) != nil", err)
 	}
+}
+
+func TestRecoverWithStackTrace(t *testing.T) {
+	e := errors.New("error1")
+	err, st := RecoverWithStackTrace(func() {
+		panicFunc(e)
+	})
+	t.Logf("Error: %v", err)
+	t.Log("Stack trace:")
+	t.Log(st)
+	if e != err {
+		t.Errorf("e (\"%v\" at %p) != err (\"%v\" at %p)", e, e, err, err)
+	}
+}
+
+// To test stack trace.
+func panicFunc(err interface{}) {
+	panic(err)
 }
